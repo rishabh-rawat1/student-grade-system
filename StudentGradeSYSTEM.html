@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Grade Evaluation System</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#f2f4f8;--card:#fff;--ink:#101828;--mute:#5b6678;--line:#dde2ea;--hd:#12355b;--hdink:#fff;--ac:#0f5c7a;--acink:#fff;--soft:#e6f1f5;--gold:#f2b84b;--ok:#17803d;--okbg:#e4f5ea;--bad:#b42318;--badbg:#fdeceb;--wn:#9a5b00;--wnbg:#fff3dc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e141b;--card:#161e28;--ink:#e8edf3;--mute:#96a3b5;--line:#2a3544;--hd:#0b2236;--ac:#5bb4d3;--acink:#06222d;--soft:#16303b;--ok:#4cc97a;--okbg:#12301f;--bad:#ff8a80;--badbg:#3a1a18;--wn:#f0b45e;--wnbg:#3a2c12}}
+html{color-scheme:light dark;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:var(--hd);color:var(--hdink);border-bottom:4px solid var(--gold)}
+.in{max-width:1080px;margin:0 auto;padding:0 16px}
+.top{padding:22px 0 10px}
+.top h1{margin:0;font-size:clamp(21px,4vw,30px);font-weight:700;letter-spacing:-.01em}
+.top p{margin:4px 0 0;opacity:.85;font-size:14px}
+nav{display:flex;gap:4px;overflow-x:auto}
+nav button{background:none;border:0;color:var(--hdink);opacity:.75;padding:12px 16px;border-bottom:3px solid transparent;border-radius:0;font-weight:500;white-space:nowrap}
+nav button[aria-selected="true"]{opacity:1;border-bottom-color:var(--gold);font-weight:600}
+main{padding:20px 16px 48px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 12px;font-size:17px;font-weight:600}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+label{display:block;font-size:13px;color:var(--mute);margin-bottom:4px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+input.err{border-color:var(--bad);background:var(--badbg)}
+.sc{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{text-align:left;font-size:13px;font-weight:600;color:var(--mute);padding:8px 6px;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:6px;border-bottom:1px solid var(--line);vertical-align:middle}
+td input{padding:6px 8px}.w{width:96px}
+tbody tr.click{cursor:pointer}tbody tr.click:hover{background:var(--soft)}
+.pill{display:inline-block;min-width:34px;text-align:center;font-weight:700;border-radius:6px;padding:2px 8px;background:var(--soft);color:var(--ac)}
+.pill.f{background:var(--badbg);color:var(--bad)}
+.tag{font-size:13px;font-weight:600;border-radius:6px;padding:2px 8px}
+.tag.p{background:var(--okbg);color:var(--ok)}.tag.f{background:var(--badbg);color:var(--bad)}.tag.i{background:var(--wnbg);color:var(--wn)}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px}
+button.pr{background:var(--ac);color:var(--acink);border-color:var(--ac);font-weight:600}
+button.x{padding:4px 9px;color:var(--bad)}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.bar.t{margin:0 0 14px}.bar select{width:auto;min-width:220px;flex:1}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-size:25px;font-weight:700;line-height:1.25}
+.stat span{font-size:13px;color:var(--mute)}
+.ver{margin-top:14px;padding:12px 16px;border-radius:10px;font-weight:600}
+.ver.p{background:var(--okbg);color:var(--ok)}.ver.f{background:var(--badbg);color:var(--bad)}.ver.i{background:var(--wnbg);color:var(--wn)}
+.meter{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:14px}
+.meter i{display:block;height:100%;width:0;background:var(--ac);transition:width .3s}
+.dist{display:grid;gap:8px}
+.dr{display:grid;grid-template-columns:44px 1fr 34px;gap:10px;align-items:center;font-size:14px}
+.dr div{height:14px;background:var(--line);border-radius:7px;overflow:hidden}.dr div i{display:block;height:100%;background:var(--ac)}
+.note{font-size:13px;color:var(--mute);margin:10px 0 0}
+.msg{font-size:13px;color:var(--mute)}
+[hidden]{display:none!important}
+.po{display:none}
+@media print{header,nav,.bar,#cls,#set{display:none!important}body{background:#fff;color:#000}.card{break-inside:avoid;border-color:#999}input{border:none;background:none}.po{display:block!important;margin-bottom:12px}}
+</style>
+</head>
+<body>
+<header>
+<div class="in">
+<div class="top"><h1>Student Grade Evaluation</h1><p>Micro Project &middot; B.Tech CSBS &middot; Semester I &middot; MITS Gwalior</p></div>
+<nav role="tablist">
+<button role="tab" data-v="eval" aria-selected="true">Evaluate student</button>
+<button role="tab" data-v="cls" aria-selected="false">Class results</button>
+<button role="tab" data-v="set" aria-selected="false">Subjects &amp; grading scale</button>
+</nav>
+</div>
+</header>
+<main class="in">
+
+<section id="eval">
+<div class="po"><h1>Student Grade Evaluation Report</h1><p>B.Tech CSBS | Semester I | MITS Gwalior</p></div>
+<div class="card">
+<div class="bar t"><select id="sel" aria-label="Select student"></select><button class="pr" id="ns">Add student</button><button id="ds">Delete student</button></div>
+<div class="grid">
+<div><label for="nm">Student name</label><input id="nm" placeholder="Full name"></div>
+<div><label for="en">Enrollment number</label><input id="en" placeholder="e.g. 0901CS26XXXX"></div>
+<div><label for="sc"> Branch \ Section </label><input id="sc" placeholder="e.g. CSE-A"></div>
+</div>
+</div>
+<div class="card"><h2>Marks</h2>
+<div class="sc"><table><thead><tr><th>Subject</th><th>Max</th><th>Marks obtained</th><th>Credits</th><th>%</th><th>Grade</th><th>GP</th><th>Status</th></tr></thead><tbody id="mk"></tbody></table></div>
+</div>
+<div class="card" aria-live="polite"><h2>Result</h2>
+<div class="stats"><div class="stat"><b id="rt">0 / 0</b><span>Total marks</span></div><div class="stat"><b id="rp">0.00%</b><span>Percentage</span></div><div class="stat"><b id="rs">0.00</b><span>SGPA (out of 10)</span></div><div class="stat"><b id="rg">&ndash;</b><span>Overall grade</span></div></div>
+<div class="meter" aria-hidden="true"><i id="mt"></i></div>
+<div class="ver i" id="rv">Enter marks to see the result.</div>
+<div class="bar"><button class="pr" id="pdf">Save result as PDF</button><span class="msg" id="pm" role="status"></span></div>
+</div>
+</section>
+
+<section id="cls" hidden>
+<div class="stats" style="margin-bottom:16px" id="cs"></div>
+<div class="card"><h2>Grade distribution</h2><div class="dist" id="dist"></div></div>
+<div class="card"><h2>Ranking</h2>
+<div class="bar t"><input id="q" placeholder="Search name or enrollment" aria-label="Search students" style="flex:1;min-width:200px"><button id="csv">Export CSV</button><span class="msg" id="cm" role="status"></span></div>
+<div class="sc"><table><thead><tr><th>Rank</th><th>Name</th><th>Enrollment</th><th>Total</th><th>%</th><th>SGPA</th><th>Grade</th><th>Result</th></tr></thead><tbody id="rk"></tbody></table></div>
+<p class="note">Rank uses SGPA, then percentage. Only students with all subject marks entered are ranked. Click a row to open that student.</p>
+</div>
+</section>
+
+<section id="set" hidden>
+<div class="card"><h2>Subjects</h2>
+<div class="sc"><table style="min-width:480px"><thead><tr><th>Subject name</th><th>Max marks</th><th>Credits</th><th></th></tr></thead><tbody id="sb"></tbody></table></div>
+<div class="bar"><button class="pr" id="as">Add subject</button></div>
+<p class="note">Rename the subjects to your actual Semester I papers and set the correct credits. SGPA is credit-weighted.</p>
+</div>
+<div class="card"><h2>Grading scale</h2>
+<div class="sc"><table style="min-width:420px"><thead><tr><th>Grade</th><th>Minimum %</th><th>Grade point</th><th>Remark</th></tr></thead><tbody id="gs"></tbody></table></div>
+<p class="note">Standard 10-point scale. Edit the minimum % to match the scheme in the MITS Gwalior ordinance or the one your mentor gives you. Everything recalculates.</p>
+</div>
+<div class="card"><h2>Data</h2>
+<div class="bar" style="margin-top:0"><button id="demo">Load sample class (5 students)</button><button id="clr">Clear all data</button></div>
+<p class="note">Your data is saved in this browser automatically. Sample students are made-up names for demonstration.</p>
+</div>
+</section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+var K="mits-grade-v3",$=function(i){return document.getElementById(i)};
+var DEF={scale:[{g:"A+",min:90,gp:10,r:"Outstanding"},{g:"A",min:80,gp:9,r:"Excellent"},{g:"B+",min:70,gp:8,r:"Very good"},{g:"B",min:60,gp:7,r:"Good"},{g:"C+",min:50,gp:6,r:"Above average"},{g:"C",min:45,gp:5,r:"Average"},{g:"D",min:40,gp:4,r:"Pass"},{g:"F",min:0,gp:0,r:"Fail"}],
+subjects:[{n:"Digital Logic Design",m:100,c:3},{n:"Computer Programming",m:100,c:2},{n:"Computer Science And Business Systems",m:100,c:3},{n:"Web Technology",m:100,c:3},{n:"Matrices and Calculus",m:100,c:3}],students:[],sel:0};
+var S=load();
+function load(){try{var v=JSON.parse(localStorage.getItem(K));if(v&&v.subjects&&v.students)return v}catch(e){}var d=JSON.parse(JSON.stringify(DEF));d.students.push(blank(d));return d}
+function blank(d){return{n:"",e:"",s:"",k:(d||S).subjects.map(function(){return""})}}
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function gradeOf(p){var s=S.scale.slice().sort(function(a,b){return b.min-a.min});for(var i=0;i<s.length;i++)if(p>=s[i].min)return s[i];return s[s.length-1]}
+function ev(st){var T=0,M=0,W=0,C=0,f=0,n=0,bad=false,rows=S.subjects.map(function(s,i){var v=st.k[i];if(v===""||v==null)return null;v=+v;if(isNaN(v)||v<0||v>s.m){bad=true;return null}var p=v/s.m*100,g=gradeOf(p);T+=v;M+=s.m;W+=g.gp*s.c;C+=s.c;n++;if(g.gp===0)f++;return{p:p,g:g}});
+var pct=M?T/M*100:0;return{rows:rows,T:T,M:M,pct:pct,sg:C?W/C:0,f:f,n:n,bad:bad,full:n===S.subjects.length,g:n?gradeOf(pct):null}}
+function status(r){return !r.full?"Incomplete":r.f?"Fail":"Pass"}
+function cur(){return S.students[S.sel]}
+function pill(g){return '<span class="pill'+(g.gp===0?' f':'')+'">'+esc(g.g)+'</span>'}
+function tag(t){return '<span class="tag '+(t==="Pass"?"p":t==="Fail"?"f":"i")+'">'+t+'</span>'}
+
+/* tabs */
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
+function show(v){document.querySelectorAll("nav button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.v===v)});["eval","cls","set"].forEach(function(x){$(x).hidden=x!==v});if(v==="cls")drawClass();if(v==="eval")drawEval();if(v==="set")drawSet()}
+
+/* evaluate */
+function drawEval(){
+  var o="";S.students.forEach(function(s,i){o+='<option value="'+i+'"'+(i===S.sel?' selected':'')+'>'+(i+1)+'. '+esc(s.n||"Unnamed student")+'</option>'});$("sel").innerHTML=o;
+  var st=cur();$("nm").value=st.n;$("en").value=st.e;$("sc").value=st.s;
+  $("mk").innerHTML=S.subjects.map(function(s,i){return '<tr><td>'+esc(s.n)+'</td><td>'+s.m+'</td><td class="w"><input type="number" min="0" max="'+s.m+'" data-i="'+i+'" value="'+esc(st.k[i])+'" placeholder="0" aria-label="Marks in '+esc(s.n)+'"></td><td>'+s.c+'</td><td class="p">&ndash;</td><td class="g">&ndash;</td><td class="q">&ndash;</td><td class="s"></td></tr>'}).join("");
+  document.querySelectorAll("#mk input").forEach(function(inp){inp.oninput=function(){cur().k[+inp.dataset.i]=inp.value;save();upd()}});
+  upd();
+}
+function upd(){
+  var st=cur(),r=ev(st),tr=$("mk").children;
+  S.subjects.forEach(function(s,i){var x=r.rows[i],t=tr[i],inp=t.querySelector("input");inp.classList.toggle("err",inp.value!==""&&!x);
+    t.querySelector(".p").textContent=x?x.p.toFixed(2):"–";t.querySelector(".g").innerHTML=x?pill(x.g):"–";t.querySelector(".q").textContent=x?x.g.gp:"–";t.querySelector(".s").innerHTML=x?tag(x.g.gp===0?"Fail":"Pass"):""});
+  $("rt").textContent=r.T+" / "+r.M;$("rp").textContent=r.pct.toFixed(2)+"%";$("rs").textContent=r.sg.toFixed(2);$("rg").textContent=r.g?r.g.g:"–";$("mt").style.width=Math.min(100,r.pct)+"%";
+  var v=$("rv"),s=status(r);
+  if(r.bad){v.className="ver f";v.textContent="Check the highlighted cells: marks must be between 0 and the maximum."}
+  else if(!r.n){v.className="ver i";v.textContent="Enter marks to see the result."}
+  else if(!r.full){v.className="ver i";v.textContent="Incomplete: enter marks for all subjects to get the final result and SGPA."}
+  else if(r.f){v.className="ver f";v.textContent="Result: Needs improvement. Failed in "+r.f+" subject"+(r.f>1?"s":"")+"."}
+  else{v.className="ver p";v.textContent="Result: Pass. Overall grade "+r.g.g+" with SGPA "+r.sg.toFixed(2)+"."}
+}
+$("sel").onchange=function(){S.sel=+$("sel").value;save();drawEval()};
+["nm","en","sc"].forEach(function(id,j){$(id).oninput=function(){var k=["n","e","s"][j];cur()[k]=$(id).value;save();var o=$("sel").options[S.sel];if(o)o.textContent=(S.sel+1)+". "+(cur().n||"Unnamed student")}});
+$("ns").onclick=function(){S.students.push(blank());S.sel=S.students.length-1;save();drawEval();$("nm").focus()};
+$("ds").onclick=function(){if(S.students.length<2){S.students[0]=blank()}else{S.students.splice(S.sel,1);S.sel=Math.max(0,S.sel-1)}save();drawEval()};
+
+/* class */
+function rankList(){var a=S.students.map(function(s,i){return{s:s,i:i,r:ev(s)}});var done=a.filter(function(x){return x.r.full&&!x.r.bad}).sort(function(x,y){return y.r.sg-x.r.sg||y.r.pct-x.r.pct});done.forEach(function(x,j){x.rank=j+1});return{all:a,done:done}}
+function drawClass(){
+  var R=rankList(),d=R.done,n=d.length,avg=n?d.reduce(function(a,x){return a+x.r.pct},0)/n:0,pass=d.filter(function(x){return !x.r.f}).length;
+  $("cs").innerHTML=[[S.students.length,"Students"],[n?avg.toFixed(2)+"%":"–","Class average"],[n?Math.round(pass/n*100)+"%":"–","Pass percentage"],[n?esc(d[0].s.n||"Unnamed"):"–","Topper"]].map(function(x){return '<div class="stat"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>'}).join("");
+  var cnt={};d.forEach(function(x){cnt[x.r.g.g]=(cnt[x.r.g.g]||0)+1});
+  $("dist").innerHTML=S.scale.map(function(g){var c=cnt[g.g]||0;return '<div class="dr"><span>'+esc(g.g)+'</span><div><i style="width:'+(n?c/n*100:0)+'%"></i></div><span>'+c+'</span></div>'}).join("");
+  drawRank();
+}
+function drawRank(){
+  var q=$("q").value.toLowerCase(),R=rankList().all.slice().sort(function(a,b){return (a.rank||999)-(b.rank||999)||a.i-b.i}).filter(function(x){return (x.s.n+" "+x.s.e).toLowerCase().indexOf(q)>-1});
+  $("rk").innerHTML=R.length?R.map(function(x){var r=x.r;return '<tr class="click" data-i="'+x.i+'"><td>'+(x.rank||"–")+'</td><td>'+esc(x.s.n||"Unnamed student")+'</td><td>'+esc(x.s.e||"–")+'</td><td>'+r.T+" / "+r.M+'</td><td>'+(r.n?r.pct.toFixed(2):"–")+'</td><td>'+(r.n?r.sg.toFixed(2):"–")+'</td><td>'+(r.g?pill(r.g):"–")+'</td><td>'+tag(status(r))+'</td></tr>'}).join(""):'<tr><td colspan="8">No students match. Add students in the Evaluate tab or load the sample class from Settings.</td></tr>';
+  document.querySelectorAll("#rk tr.click").forEach(function(t){t.onclick=function(){S.sel=+t.dataset.i;save();show("eval")}});
+}
+$("q").oninput=drawRank;
+function dlSave(name,data,m){var el=$(m);try{var b=data instanceof Blob?data:new Blob([data],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();el.textContent="Downloaded to your Downloads folder."}catch(e){el.textContent="Could not save the file. Please try again."}}
+$("csv").onclick=function(){var R=rankList().all,c=function(v){return '"'+String(v).replace(/"/g,'""')+'"'};
+  var rows=[["Rank","Name","Enrollment","Section"].concat(S.subjects.map(function(s){return s.n})).concat(["Total","Max","Percentage","SGPA","Grade","Result"])];
+  R.sort(function(a,b){return (a.rank||999)-(b.rank||999)}).forEach(function(x){var r=x.r;rows.push([x.rank||"",x.s.n,x.s.e,x.s.s].concat(x.s.k).concat([r.T,r.M,r.n?r.pct.toFixed(2):"",r.n?r.sg.toFixed(2):"",r.g?r.g.g:"",status(r)]))});
+  dlSave("class-results.csv",rows.map(function(r){return r.map(c).join(",")}).join("\r\n"),"cm")};
+
+/* settings */
+function drawSet(){
+  $("sb").innerHTML=S.subjects.map(function(s,i){return '<tr><td><input data-f="n" data-i="'+i+'" value="'+esc(s.n)+'" aria-label="Subject name"></td><td class="w"><input type="number" min="1" data-f="m" data-i="'+i+'" value="'+s.m+'" aria-label="Max marks"></td><td class="w"><input type="number" min="0" step="0.5" data-f="c" data-i="'+i+'" value="'+s.c+'" aria-label="Credits"></td><td><button class="x" data-d="'+i+'" aria-label="Remove subject">&times;</button></td></tr>'}).join("");
+  document.querySelectorAll("#sb input").forEach(function(inp){inp.oninput=function(){var s=S.subjects[+inp.dataset.i],f=inp.dataset.f;s[f]=f==="n"?inp.value:(parseFloat(inp.value)||(f==="m"?100:0));save()}});
+  document.querySelectorAll("#sb .x").forEach(function(b){b.onclick=function(){if(S.subjects.length<2)return;var i=+b.dataset.d;S.subjects.splice(i,1);S.students.forEach(function(s){s.k.splice(i,1)});save();drawSet()}});
+  $("gs").innerHTML=S.scale.map(function(x,i){return '<tr><td>'+pill(x)+'</td><td class="w">'+(i===S.scale.length-1?'Below '+S.scale[i-1].min:'<input type="number" min="0" max="100" data-g="'+i+'" value="'+x.min+'" aria-label="Minimum percentage for '+esc(x.g)+'">')+'</td><td>'+x.gp+'</td><td>'+esc(x.r)+'</td></tr>'}).join("");
+  document.querySelectorAll("#gs input").forEach(function(inp){inp.oninput=function(){S.scale[+inp.dataset.g].min=parseFloat(inp.value)||0;save()}});
+}
+$("as").onclick=function(){S.subjects.push({n:"New subject",m:100,c:3});S.students.forEach(function(s){s.k.push("")});save();drawSet()};
+$("demo").onclick=function(){var nm=["Aarav Sharma","Diya Verma","Kabir Singh","Meera Joshi","Rohan Gupta"],mk=[[88,92,85,90],[76,81,69,74],[58,47,62,51],[95,91,97,93],[38,52,44,60]];
+  S.students=nm.map(function(n,i){return{n:n+" (sample)",e:"SAMPLE-"+(i+1),s:"CSBS-A",k:S.subjects.map(function(s,j){return String(Math.round((mk[i][j%4]/100)*s.m))})}});S.sel=0;save();show("cls")};
+$("clr").onclick=function(){S.students=[blank()];S.sel=0;save();show("eval")};
+
+/* PDF */
+function buildPdf(){
+  var J=window.jspdf;if(!J||!J.jsPDF)return null;var st=cur(),r=ev(st);if(!r.n||r.bad)return false;
+  var body=[];S.subjects.forEach(function(s,i){var x=r.rows[i];if(x)body.push([s.n,st.k[i]+" / "+s.m,String(s.c),x.p.toFixed(2),x.g.g,String(x.g.gp),x.g.gp===0?"Fail":"Pass"])});
+  var d=new J.jsPDF({unit:"pt",format:"a4"}),W=d.internal.pageSize.getWidth();
+  d.setFillColor(18,53,91);d.rect(0,0,W,90,"F");d.setFillColor(242,184,75);d.rect(0,90,W,4,"F");
+  d.setTextColor(255,255,255);d.setFont("helvetica","bold");d.setFontSize(20);d.text("Student Grade Evaluation Report",40,42);
+  d.setFont("helvetica","normal");d.setFontSize(10.5);d.text("B.Tech CSBS | Semester I | MITS Gwalior",40,64);
+  d.setTextColor(20,20,20);d.setFontSize(11);var y=120;
+  [["Name",st.n||"-"],["Enrollment no.",st.e||"-"],["Section",st.s||"-"],["Date",new Date().toLocaleDateString("en-IN")]].forEach(function(x){d.setFont("helvetica","bold");d.text(x[0]+":",40,y);d.setFont("helvetica","normal");d.text(String(x[1]),140,y);y+=17});
+  d.autoTable({startY:y+8,head:[["Subject","Marks","Credits","%","Grade","Grade point","Status"]],body:body,theme:"grid",headStyles:{fillColor:[18,53,91]},styles:{fontSize:10,cellPadding:5},margin:{left:40,right:40}});
+  y=d.lastAutoTable.finalY+26;if(y>640){d.addPage();y=60}
+  d.setFont("helvetica","bold");d.setFontSize(13);d.text("Result summary",40,y);y+=20;d.setFontSize(11);
+  [["Total marks",r.T+" / "+r.M],["Percentage",r.pct.toFixed(2)+"%"],["SGPA",r.sg.toFixed(2)+" / 10"],["Overall grade",r.g.g],["Status",status(r)]].forEach(function(x){d.setFont("helvetica","bold");d.text(x[0]+":",40,y);d.setFont("helvetica","normal");d.text(x[1],140,y);y+=17});
+  d.autoTable({startY:y+10,head:[["Grade","Minimum %","Grade point","Remark"]],body:S.scale.map(function(s){return [s.g,String(s.min),String(s.gp),s.r]}),theme:"striped",headStyles:{fillColor:[90,100,115]},styles:{fontSize:9,cellPadding:3},margin:{left:40,right:40},tableWidth:300});
+  var sy=Math.max(d.lastAutoTable.finalY+50,740);if(sy>810){d.addPage();sy=120}
+  d.setFont("helvetica","normal");d.setFontSize(10);d.text("Student signature: ____________________",40,sy);d.text("Mentor signature: ____________________",W-260,sy);
+  return d;
+}
+$("pdf").onclick=function(){var m=$("pm"),d;try{d=buildPdf()}catch(e){d=null}
+  if(d===null){var r0=ev(cur());if(!r0.n||r0.bad){m.textContent="Enter valid marks for at least one subject first.";return}m.textContent="Print window opened: choose Save as PDF.";window.print();return}
+  if(d===false){m.textContent="Enter valid marks for at least one subject first.";return}
+  var nm=(cur().n||"student").trim().replace(/[^\w\- ]+/g,"").replace(/\s+/g,"-")||"student";
+  dlSave("Grade-Report-"+nm+".pdf",d.output("blob"),"pm")};
+
+drawEval();
+</script>
+</body>
+</html>
